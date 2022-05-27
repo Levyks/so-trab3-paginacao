@@ -16,7 +16,7 @@ fn get_page(frames: &Frames, page_number: u32) -> Option<&Page> {
     return None;
 }
 
-fn insert_page(frames: &mut Frames, page_number: u32) {
+fn load_page(frames: &mut Frames, page_number: u32) {
     frames.pop();
     frames.insert(
         0,
@@ -35,7 +35,7 @@ pub fn simulate(refs: &Vec<u32>, number_of_frames: usize) -> u32 {
 
         if page.is_none() {
             page_faults += 1;
-            insert_page(&mut frames, *reference);
+            load_page(&mut frames, *reference);
         }
     }
 
