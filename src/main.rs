@@ -3,6 +3,7 @@ use std::env;
 use std::fs::File;
 use std::io::Write;
 
+mod aging;
 mod fifo;
 
 fn create_references(number_of_references: usize, number_of_pages: u32) -> Vec<u32> {
@@ -57,6 +58,8 @@ fn main() {
     write_refs_to_file(path_refs_file, &refs, number_of_pages);
 
     let fifo_page_faults = fifo::simulate(&refs, number_of_frames);
+    let aging_page_faults = aging::simulate(&refs, number_of_frames);
 
     println!("FIFO page faults: {}", fifo_page_faults);
+    println!("Aging page faults: {}", aging_page_faults);
 }
