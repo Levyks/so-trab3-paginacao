@@ -58,8 +58,19 @@ fn main() {
     write_refs_to_file(path_refs_file, &refs, number_of_pages);
 
     let fifo_page_faults = fifo::simulate(&refs, number_of_frames);
-    let aging_page_faults = aging::simulate(&refs, number_of_frames);
+    let fifo_faults_ratio = (fifo_page_faults as f32) / (number_of_references as f32);
 
-    println!("FIFO page faults: {}", fifo_page_faults);
-    println!("Aging page faults: {}", aging_page_faults);
+    let aging_page_faults = aging::simulate(&refs, number_of_frames);
+    let aging_faults_ratio = (aging_page_faults as f32) / (number_of_references as f32);
+
+    println!(
+        "FIFO page faults: {}, or {} per 1000 references",
+        fifo_page_faults,
+        fifo_faults_ratio * 1000.0
+    );
+    println!(
+        "Aging page faults: {}, or {} per 1000 references",
+        aging_page_faults,
+        aging_faults_ratio * 1000.0
+    );
 }
