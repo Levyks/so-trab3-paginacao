@@ -17,21 +17,32 @@ fn get_page(frames: &mut Frames, page_number: u32) -> Option<&mut Page> {
     None
 }
 
-fn sort_based_on_counter(frames: &mut Frames) {
-    frames.sort_by(|a, b| b.counter.cmp(&a.counter));
+fn get_idx_smallest_counter(frames: &mut Frames) -> usize {
+    let mut smallest_counter = frames[0].counter;
+    let mut smallest_idx = 0;
+    for (idx, page) in frames.iter().enumerate() {
+        if page.counter < smallest_counter {
+            smallest_counter = page.counter;
+            smallest_idx = idx;
+        }
+    }
+    return smallest_idx;
 }
 
 fn load_page(frames: &mut Frames, page_number: u32, number_of_frames: usize) -> &mut Page {
-    if frames.len() >= number_of_frames {
-        sort_based_on_counter(frames);
-        frames.pop();
-    }
     let page = Page {
         number: page_number,
         counter: 0,
     };
-    frames.insert(0, page);
-    return frames.first_mut().unwrap();
+
+    if frames.len() >= number_of_frames {
+        let idx_smallest_counter = get_idx_smallest_counter(frames);
+        frames[idx_smallest_counter] = page;
+        return frames.get_mut(idx_smallest_counter).unwrap();
+    } else {
+        frames.insert(0, page);
+        return frames.first_mut().unwrap();
+    };
 }
 
 fn age_pages(frames: &mut Frames) {
